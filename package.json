@@ -1,0 +1,11 @@
+json{
+  "name": "trello-dashboard",
+  "version": "1.0.0",
+  "description": "Dashboard automatizado do Trello",
+  "scripts": {
+    "fetch": "node scripts/fetch-trello.js"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.1"
+  }
+}
