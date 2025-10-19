@@ -1,0 +1,37 @@
+name: Update Trello Data
+
+on:
+  schedule:
+    # Executa a cada 3 horas
+    - cron: '0 */3 * * *'
+  workflow_dispatch: # Permite execução manual
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        
+    - name: Install dependencies
+      run: npm install
+      
+    - name: Fetch Trello data
+      env:
+        TRELLO_API_KEY: ${{ secrets.TRELLO_API_KEY }}
+        TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
+        TRELLO_BOARD_ID: ${{ secrets.TRELLO_BOARD_ID }}
+      run: npm run fetch
+      
+    - name: Commit and push changes
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add data/trello-data.json
+        git diff --quiet && git diff --staged --quiet || (git commit -m "🤖 Atualização automática dos dados do Trello" && git push)
